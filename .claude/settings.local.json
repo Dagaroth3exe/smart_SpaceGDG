@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Start-Sleep -Seconds 5; try { $r = Invoke-WebRequest -Uri \"http://localhost:3000\" -TimeoutSec 15 -UseBasicParsing; Write-Output \"HTTP $\\($r.StatusCode\\)\" } catch { $_.Exception.Message | Select-Object -First 3 })",
+      "Bash(npx playwright *)",
+      "PowerShell(Get-Process *)",
+      "Bash(node *)",
+      "PowerShell(try { $r = Invoke-WebRequest -Uri \"http://localhost:3000\" -TimeoutSec 5 -UseBasicParsing; Write-Output \"Server UP - HTTP $\\($r.StatusCode\\)\" } catch { Write-Output \"Server DOWN: $_\" })"
+    ]
+  }
+}
