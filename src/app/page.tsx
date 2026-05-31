@@ -2,6 +2,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import HeroSection from "@/components/sections/HeroSection";
 import FeaturesSection from "@/components/sections/FeaturesSection";
+import PricePulseTeaser from "@/components/sections/PricePulseTeaser";
 import AIChatSection from "@/components/sections/AIChatSection";
 import MarketStats from "@/components/sections/MarketStats";
 import PropertyListings from "@/components/sections/PropertyListings";
@@ -13,6 +14,7 @@ export default function Home() {
       <Navbar />
       <HeroSection />
       <FeaturesSection />
+      <PricePulseTeaser />
       <AIChatSection />
       <MarketStats />
       <PropertyListings />
