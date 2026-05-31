@@ -5,7 +5,11 @@
       "Bash(npx playwright *)",
       "PowerShell(Get-Process *)",
       "Bash(node *)",
-      "PowerShell(try { $r = Invoke-WebRequest -Uri \"http://localhost:3000\" -TimeoutSec 5 -UseBasicParsing; Write-Output \"Server UP - HTTP $\\($r.StatusCode\\)\" } catch { Write-Output \"Server DOWN: $_\" })"
+      "PowerShell(try { $r = Invoke-WebRequest -Uri \"http://localhost:3000\" -TimeoutSec 5 -UseBasicParsing; Write-Output \"Server UP - HTTP $\\($r.StatusCode\\)\" } catch { Write-Output \"Server DOWN: $_\" })",
+      "PowerShell(Start-Sleep -Seconds 3; try { $r = Invoke-WebRequest -Uri \"http://localhost:3000/pricepulse\" -TimeoutSec 10 -UseBasicParsing; Write-Output \"HTTP $\\($r.StatusCode\\)\" } catch { Write-Output \"Error: $\\($_.Exception.Message\\)\" })",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)"
     ]
   }
 }
