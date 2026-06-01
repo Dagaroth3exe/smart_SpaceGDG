@@ -24,8 +24,8 @@ export default function Navbar() {
   }, []);
 
   async function handleSignOut() {
-    const supabase = createClient();
-    await supabase.auth.signOut();
+    await fetch("/auth/signout", { method: "POST" });
+    window.location.href = "/";
   }
 
   return (
@@ -55,10 +55,26 @@ export default function Navbar() {
         <div className="flex items-center gap-4">
           {user ? (
             <>
-              <span className="hidden sm:block text-xs text-[#666] truncate max-w-[140px]">{user.email}</span>
+              <div className="hidden sm:flex items-center gap-2">
+                {user.user_metadata?.avatar_url ? (
+                  <img
+                    src={user.user_metadata.avatar_url}
+                    alt={user.user_metadata?.full_name ?? "avatar"}
+                    className="w-6 h-6 rounded-full object-cover"
+                    referrerPolicy="no-referrer"
+                  />
+                ) : (
+                  <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-[10px] text-white font-medium">
+                    {(user.user_metadata?.full_name ?? user.email ?? "?")[0].toUpperCase()}
+                  </div>
+                )}
+                <span className="text-xs text-[#888] truncate max-w-[120px]">
+                  {user.user_metadata?.full_name ?? user.email}
+                </span>
+              </div>
               <button
                 onClick={handleSignOut}
-                className="text-sm text-[#888] hover:text-white transition-colors"
+                className="text-sm px-3.5 py-1.5 rounded-md bg-white text-black font-medium hover:bg-white/90 transition-colors"
               >
                 Sign out
               </button>

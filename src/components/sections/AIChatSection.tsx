@@ -21,8 +21,12 @@ export default function AIChatSection() {
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
+  const mounted = useRef(false);
 
-  useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [msgs, typing]);
+  useEffect(() => {
+    if (!mounted.current) { mounted.current = true; return; }
+    endRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [msgs, typing]);
 
   const send = (text: string) => {
     if (!text.trim()) return;

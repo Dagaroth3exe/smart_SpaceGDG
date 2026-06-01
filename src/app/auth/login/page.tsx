@@ -60,9 +60,12 @@ export default function LoginPage() {
 
       <div className="relative w-full max-w-sm">
         {/* logo */}
-        <a href="/" className="block text-center text-sm font-semibold tracking-tight text-white mb-8">
-          SmartSpace
-        </a>
+        <div className="text-center mb-8">
+          <a href="/" className="inline-flex flex-col items-center gap-1">
+            <span className="text-2xl font-bold tracking-tight text-white">SmartSpace</span>
+            <span className="text-xs text-[#555]">AI-powered real estate</span>
+          </a>
+        </div>
 
         {/* card */}
         <div className="rounded-xl border border-white/8 bg-white/[0.04] backdrop-blur-md p-8">
