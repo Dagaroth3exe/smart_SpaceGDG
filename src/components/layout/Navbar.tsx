@@ -1,15 +1,32 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { createClient } from "@/lib/supabase/client";
+import type { User } from "@supabase/supabase-js";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", fn);
     return () => window.removeEventListener("scroll", fn);
   }, []);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => setUser(data.user));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  async function handleSignOut() {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+  }
 
   return (
     <nav
@@ -34,11 +51,26 @@ export default function Navbar() {
             </a>
           </div>
         </div>
+
         <div className="flex items-center gap-4">
-          <button className="text-sm text-[#888] hover:text-white transition-colors">Sign in</button>
-          <button className="text-sm px-3.5 py-1.5 rounded-md bg-white text-black font-medium hover:bg-white/90 transition-colors">
-            Get started
-          </button>
+          {user ? (
+            <>
+              <span className="hidden sm:block text-xs text-[#666] truncate max-w-[140px]">{user.email}</span>
+              <button
+                onClick={handleSignOut}
+                className="text-sm text-[#888] hover:text-white transition-colors"
+              >
+                Sign out
+              </button>
+            </>
+          ) : (
+            <>
+              <a href="/auth/login" className="text-sm text-[#888] hover:text-white transition-colors">Sign in</a>
+              <a href="/auth/login" className="text-sm px-3.5 py-1.5 rounded-md bg-white text-black font-medium hover:bg-white/90 transition-colors">
+                Get started
+              </a>
+            </>
+          )}
         </div>
       </div>
     </nav>

@@ -22,6 +22,8 @@
   },
   "homepage": "https://github.com/Dagaroth3exe/smart_SpaceGDG#readme",
   "dependencies": {
+    "@supabase/ssr": "^0.10.3",
+    "@supabase/supabase-js": "^2.106.2",
     "@tailwindcss/postcss": "^4.3.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.563.0",
