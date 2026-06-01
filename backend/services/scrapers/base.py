@@ -11,7 +11,7 @@ SCRAPER_API_KEY = os.getenv("SCRAPER_API_KEY", "")
 _BASE = "https://api.scraperapi.com/"
 
 
-def fetch(url: str, render_js: bool = False, timeout: int = 30) -> str:
+def fetch(url: str, render_js: bool = False, timeout: int = 55) -> str:
     """Fetch a URL through ScraperAPI. Raises on HTTP error."""
     params = {
         "api_key": SCRAPER_API_KEY,

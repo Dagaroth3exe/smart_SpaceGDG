@@ -7,7 +7,7 @@ Falls back to mock data per-source if a scraper fails.
 import asyncio
 import logging
 import statistics
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor, as_completed, TimeoutError as FuturesTimeout
 from dataclasses import dataclass
 
 from services.scrapers import acres99, magicbricks, nobroker, housing
@@ -107,7 +107,7 @@ def calculate(asking_price: float, location: str, sqft: int, property_type: str)
 
 
 def _fetch_all_sources(location: str, sqft: int, property_type: str) -> list[SourcePrice]:
-    """Fetch all sources in parallel threads (max 30s total)."""
+    """Fetch all sources in parallel threads (max 60s total)."""
     results: list[SourcePrice] = []
 
     with ThreadPoolExecutor(max_workers=4) as pool:
@@ -115,16 +115,19 @@ def _fetch_all_sources(location: str, sqft: int, property_type: str) -> list[Sou
             pool.submit(fn, location, sqft, property_type): name
             for name, fn in _SOURCES
         }
-        for future in as_completed(futures, timeout=30):
-            name = futures[future]
-            try:
-                prices = future.result()
-                if prices:
-                    avg = round(statistics.mean(prices), 1)
-                    results.append(SourcePrice(name, avg, len(prices)))
-                    log.info("%s → %d listings, avg ₹%sL", name, len(prices), avg)
-            except Exception as exc:
-                log.warning("%s failed: %s", name, exc)
+        try:
+            for future in as_completed(futures, timeout=60):
+                name = futures[future]
+                try:
+                    prices = future.result()
+                    if prices:
+                        avg = round(statistics.mean(prices), 1)
+                        results.append(SourcePrice(name, avg, len(prices)))
+                        log.info("%s → %d listings, avg ₹%sL", name, len(prices), avg)
+                except Exception as exc:
+                    log.warning("%s failed: %s", name, exc)
+        except FuturesTimeout:
+            log.warning("Scraper pool timed out — using whatever results arrived so far")
 
     return results
 
